@@ -29,33 +29,53 @@ const createWeatherCard = (cityName, weatherItem, index) => {
     }
 }
 
+const editCurrentDetails = (currTemp, currHT, currLT, currHumidity, feelsLike) => {
+    document.querySelector("#currTemp").innerHTML = `${currTemp}`;
+    document.querySelector("#currHT").innerHTML = `${currHT}`;
+    document.querySelector("#currLT").innerHTML = `${currLT}`;
+    document.querySelector("#humidity").innerHTML = `${currHumidity}`;
+    document.querySelector("#feelslike").innerHTML = `${feelsLike}`;
+}
+
 const getWeatherDetails = (cityName, latitude, longitude) => {
-    const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${"2b121bcd852c911591ed907765576054"}`;
+    const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${"2b121bcd852c911591ed907765576054"}&units=metric`;
 
     fetch(WEATHER_API_URL).then(response => response.json()).then(data => {
-        // Filter the forecasts to get only one forecast per day
-        const uniqueForecastDays = [];
-        const fiveDaysForecast = data.list.filter(forecast => {
-            const forecastDate = new Date(forecast.dt_txt).getDate();
-            if (!uniqueForecastDays.includes(forecastDate)) {
-                return uniqueForecastDays.push(forecastDate);
-            }
+        const firstForecastDate = new Date(data.list[0].dt_txt).getDate();
+        // Find the first forecast that matches the first date
+        const firstDayFirstForecast = data.list.find(forecast => {
+            return new Date(forecast.dt_txt).getDate() === firstForecastDate;
         });
+        console.log(firstDayFirstForecast.main.temp);
+        // Create an array containing only the first forecast of the first day
+        const currTemp = [firstDayFirstForecast.main.temp.toFixed(1)];
+        const currHT = [firstDayFirstForecast.main.temp_max.toFixed(1)]
+        const currLT = [firstDayFirstForecast.main.temp_min.toFixed(1)]
+        const currHumidity = [firstDayFirstForecast.main.humidity]
+        const feelsLike = [firstDayFirstForecast.main.feels_like.toFixed(1)]
+        editCurrentDetails(currTemp, currHT, currLT, currHumidity, feelsLike);
+        
+        // Filter the forecasts to get only one forecast per day
+        // const uniqueForecastDays = [];
+        // const fiveDaysForecast = data.list.filter(forecast => {
+        //     const forecastDate = new Date(forecast.dt_txt).getDate();
+        //     if (!uniqueForecastDays.includes(forecastDate)) {
+        //         return uniqueForecastDays.push(forecastDate);
+        //     }
+        // });
 
         // Clearing previous weather data
         cityInput.value = "";
-        currentWeatherDiv.innerHTML = "";
-        weatherCardsDiv.innerHTML = "";
 
         // Creating weather cards and adding them to the DOM
-        fiveDaysForecast.forEach((weatherItem, index) => {
-            const html = createWeatherCard(cityName, weatherItem, index);
-            if (index === 0) {
-                currentWeatherDiv.insertAdjacentHTML("beforeend", html);
-            } else {
-                weatherCardsDiv.insertAdjacentHTML("beforeend", html);
-            }
-        });        
+        // fiveDaysForecast.forEach((weatherItem, index) => {
+        //     const html = createWeatherCard(cityName, weatherItem, index);
+        //     if (index === 0) {
+        //         currentWeatherDiv.insertAdjacentHTML("beforeend", html);
+        //     } else {
+        //         weatherCardsDiv.insertAdjacentHTML("beforeend", html);
+        //     }
+        // });        
     }).catch(() => {
         alert("An error occurred while fetching the weather forecast!");
     });
@@ -98,6 +118,6 @@ const getUserCoordinates = () => {
         });
 }
 
-locationButton.addEventListener("click", getUserCoordinates);
+// locationButton.addEventListener("click", getUserCoordinates);
 searchButton.addEventListener("click", getCityCoordinates);
 cityInput.addEventListener("keyup", e => e.key === "Enter" && getCityCoordinates());

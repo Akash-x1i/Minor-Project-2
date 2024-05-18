@@ -14,13 +14,33 @@
       </h1>
       <div class="weather-input text-white font-medium flex justify-center gap-8 my-10 ">
         <div class="p-1 inline bg-emerald-400 hover:text-slate-600 hover:bg-emerald-300 rounded-xl">
-          <input class=" rounded-xl py-2 px-3 font-normal" type="text" placeholder="Enter a City Name">
+          <input class=" rounded-xl py-2 px-3 font-normal city-input" type="text" placeholder="Enter a City Name">
           <button class="search-btn px-3">Search</button>
         </div>
         <div class="p-2 font-semibold">OR</div>
         <button class="py-2 px-4 rounded-xl bg-emerald-400 hover:text-slate-600 hover:bg-emerald-300">Use Current Location</button>
       </div>
-      <div class="max-w-7xl bg-slate-200 opacity-60 p-96 mx-auto mt-10 rounded-2xl"></div>
+      <div class="max-w-6xl px-10 bg-slate-200 opacity-50 mx-auto mt-10 rounded-2xl">
+        <div class="flex justify-between">
+          <div class="w-[50%]">
+            <img class="mx-auto" src="https://openweathermap.org/img/wn/02n@4x.png" width="400" alt="weather-icon">
+          </div>
+          <div class="w-[50%] flex">
+            <div class="self-center flex mx-auto">
+              <div class="bg-white rounded-full h-48 w-48">
+                <div class="text-center h-48 py-6 font-light">
+                  <div class="py-4 text-5xl"> <span id="currTemp">00</span> ℃</div>
+                  <div class="py-2 text-xl">H: <span id="currHT">00</span>&ThickSpace; L: <span id="currLT">00</span></div>
+                </div>
+              </div>
+              <div class="flex flex-wrap content-between w-48 text-2xl font-light">
+                <div class="w-48 py-6 rounded-full bg-white text-center">Humidty <span class="" id="humidity">00</span></div>
+                <div class="w-48 py-6 rounded-full bg-white text-center">Feels like <span id="feelslike">00</span>℃</div>
+              </div>  
+            </div>            
+          </div>
+        </div>
+      </div>
      </div>
   </body>
 </html>
