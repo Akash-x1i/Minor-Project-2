@@ -7,7 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="index.js" defer></script>
   </head>
-  <body>
-     
+  <body class="w-full bg-emerald-500">
+     <div class="p-10 w-full">
+      <h1 class="text-center font-semibold text-white text-4xl">
+        Weather
+      </h1>
+      <div class="weather-input text-white font-medium flex justify-center gap-8 my-10 ">
+        <div class="p-1 inline bg-emerald-400 hover:text-slate-600 hover:bg-emerald-300 rounded-xl">
+          <input class=" rounded-xl py-2 px-3 font-normal" type="text" placeholder="Enter a City Name">
+          <button class="search-btn px-3">Search</button>
+        </div>
+        <div class="p-2 font-semibold">OR</div>
+        <button class="py-2 px-4 rounded-xl bg-emerald-400 hover:text-slate-600 hover:bg-emerald-300">Use Current Location</button>
+      </div>
+      <div class="max-w-7xl bg-slate-200 opacity-60 p-96 mx-auto mt-10 rounded-2xl"></div>
+     </div>
   </body>
 </html>
