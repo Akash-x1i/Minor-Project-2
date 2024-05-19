@@ -23,12 +23,15 @@ const createWeatherCard = (weatherItem, index) => {
         </div>`;
 }
 
-const editCurrentDetails = (currTemp, currHT, currLT, currHumidity, feelsLike) => {
+const editCurrentDetails = (city, currTemp, currHT, currLT, currHumidity, feelsLike, icon) => {
     document.querySelector("#currTemp").innerHTML = `${currTemp}`;
     document.querySelector("#currHT").innerHTML = `${currHT}`;
     document.querySelector("#currLT").innerHTML = `${currLT}`;
     document.querySelector("#humidity").innerHTML = `${currHumidity}`;
     document.querySelector("#feelslike").innerHTML = `${feelsLike}`;
+    document.querySelector("title").innerHTML = `${city}'s Weather Forecast`;
+    document.querySelector("#title").innerHTML = `${city}'s Weather Forecast`;
+    document.querySelector("#main-icon").innerHTML = `<img class="mx-auto" src="https://openweathermap.org/img/wn/${icon}@4x.png" width="400" alt="weather-icon">`;
 }
 
 const getWeatherDetails = (cityName, latitude, longitude) => {
@@ -47,7 +50,9 @@ const getWeatherDetails = (cityName, latitude, longitude) => {
         const currLT = [firstDayFirstForecast.main.temp_min.toFixed(1)]
         const currHumidity = [firstDayFirstForecast.main.humidity]
         const feelsLike = [firstDayFirstForecast.main.feels_like.toFixed(1)]
-        editCurrentDetails(currTemp, currHT, currLT, currHumidity, feelsLike);
+        const city = [data.city.name]
+        const icon = [firstDayFirstForecast.weather[0].icon]
+        editCurrentDetails(city, currTemp, currHT, currLT, currHumidity, feelsLike, icon);
 
         
         
@@ -71,8 +76,8 @@ const getWeatherDetails = (cityName, latitude, longitude) => {
             console.log(weatherItem.main.temp);
             
         });        
-    }).catch(() => {
-        alert("An error occurred while fetching the weather forecast!");
+        // }).catch(() => {
+        //     alert("An error occurred while fetching the weather forecast!");
     });
 }
 
