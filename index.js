@@ -2,31 +2,25 @@ const cityInput = document.querySelector(".city-input");
 const searchButton = document.querySelector(".search-btn");
 const locationButton = document.querySelector(".location-btn");
 const currentWeatherDiv = document.querySelector(".current-weather");
-const weatherCardsDiv = document.querySelector(".weather-cards");
+const weatherCardsDiv = document.querySelector("#hourlyforecast");
 
 const API_KEY = "2b121bcd852c911591ed907765576054"; 
 
-const createWeatherCard = (cityName, weatherItem, index) => {
-    if(index === 0) { // HTML for the main weather card
-        return `<div class="details">
-                    <h2>${cityName} (${weatherItem.dt_txt.split(" ")[0]})</h2>
-                    <h6>Temperature: ${(weatherItem.main.temp - 273.15).toFixed(2)}°C</h6>
-                    <h6>Wind: ${weatherItem.wind.speed} M/S</h6>
-                    <h6>Humidity: ${weatherItem.main.humidity}%</h6>
-                </div>
-                <div class="icon">
-                    <img src="https://openweathermap.org/img/wn/${weatherItem.weather[0].icon}@4x.png" alt="weather-icon">
-                    <h6>${weatherItem.weather[0].description}</h6>
-                </div>`;
-    } else { // HTML for the other five day forecast card
-        return `<li class="card">
-                    <h3>(${weatherItem.dt_txt.split(" ")[0]})</h3>
-                    <img src="https://openweathermap.org/img/wn/${weatherItem.weather[0].icon}@4x.png" alt="weather-icon">
-                    <h6>Temp: ${(weatherItem.main.temp - 273.15).toFixed(2)}°C</h6>
-                    <h6>Wind: ${weatherItem.wind.speed} M/S</h6>
-                    <h6>Humidity: ${weatherItem.main.humidity}%</h6>
-                </li>`;
+const createWeatherCard = (weatherItem, index) => {
+    if(index === 0) {
+        response = `<div class="inline-block px-3">
+        <div class="w-36 h-40 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
+          <div class="p-2">Now</div>`;
+    }else {
+        response = `<div class="inline-block px-3">
+          <div class="w-36 h-40 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
+          <div class="p-2">${weatherItem.dt_txt.split(" ")[1].split(":")[0]}:00</div>`;
     }
+    return response += `<div class="w-full h-20">
+        <img class="mx-auto w-24 -mt-4" src="https://openweathermap.org/img/wn/${weatherItem.weather[0].icon}@2x.png" alt="${weatherItem.weather[0].description}"></div>
+        <div class="p-2">${weatherItem.main.temp.toFixed(1)}℃</div>
+        </div>
+        </div>`;
 }
 
 const editCurrentDetails = (currTemp, currHT, currLT, currHumidity, feelsLike) => {
@@ -54,10 +48,12 @@ const getWeatherDetails = (cityName, latitude, longitude) => {
         const currHumidity = [firstDayFirstForecast.main.humidity]
         const feelsLike = [firstDayFirstForecast.main.feels_like.toFixed(1)]
         editCurrentDetails(currTemp, currHT, currLT, currHumidity, feelsLike);
+
         
-        // Filter the forecasts to get only one forecast per day
-        // const uniqueForecastDays = [];
-        // const fiveDaysForecast = data.list.filter(forecast => {
+        
+
+        const hourlyForecast = data.list.slice(0, 9);
+        // .filter(forecast => {
         //     const forecastDate = new Date(forecast.dt_txt).getDate();
         //     if (!uniqueForecastDays.includes(forecastDate)) {
         //         return uniqueForecastDays.push(forecastDate);
@@ -66,16 +62,15 @@ const getWeatherDetails = (cityName, latitude, longitude) => {
 
         // Clearing previous weather data
         cityInput.value = "";
+        weatherCardsDiv.innerHTML = "";
 
         // Creating weather cards and adding them to the DOM
-        // fiveDaysForecast.forEach((weatherItem, index) => {
-        //     const html = createWeatherCard(cityName, weatherItem, index);
-        //     if (index === 0) {
-        //         currentWeatherDiv.insertAdjacentHTML("beforeend", html);
-        //     } else {
-        //         weatherCardsDiv.insertAdjacentHTML("beforeend", html);
-        //     }
-        // });        
+        hourlyForecast.forEach((weatherItem, index) => {
+            const html = createWeatherCard(weatherItem, index);
+            weatherCardsDiv.insertAdjacentHTML("beforeend", html);
+            console.log(weatherItem.main.temp);
+            
+        });        
     }).catch(() => {
         alert("An error occurred while fetching the weather forecast!");
     });
