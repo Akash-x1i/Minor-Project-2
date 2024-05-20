@@ -3,6 +3,7 @@ const searchButton = document.querySelector(".search-btn");
 const locationButton = document.querySelector(".location-btn");
 const currentWeatherDiv = document.querySelector(".current-weather");
 const weatherCardsDiv = document.querySelector("#hourlyforecast");
+const forecastCardsDiv = document.querySelector("#dailyforecast");
 
 const API_KEY = "2b121bcd852c911591ed907765576054"; 
 
@@ -10,7 +11,7 @@ const createWeatherCard = (weatherItem, index) => {
     if(index === 0) {
         response = `<div class="inline-block px-3">
         <div class="w-36 h-40 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
-          <div class="p-2">Now</div>`;
+          <div class="p-2">Now ${weatherItem.dt_txt.split(" ")[1].split(":")[0]}</div>`;
     }else {
         response = `<div class="inline-block px-3">
           <div class="w-36 h-40 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
@@ -19,6 +20,18 @@ const createWeatherCard = (weatherItem, index) => {
     return response += `<div class="w-full h-20">
         <img class="mx-auto w-24 -mt-4" src="https://openweathermap.org/img/wn/${weatherItem.weather[0].icon}@2x.png" alt="${weatherItem.weather[0].description}"></div>
         <div class="p-2">${weatherItem.main.temp.toFixed(1)}℃</div>
+        </div>
+        </div>`;
+}
+
+const createdailyCard = (day, temp_min, temp_max, icon) => {
+    return response = `
+        <div class="inline-block px-3">
+        <div class="w-36 h-48 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
+        <div class="p-2">${day}</div>    <div class="w-full h-20">
+        <img class="mx-auto w-24 -mt-" src="https://openweathermap.org/img/wn/${icon}@2x.png" alt=""></div>
+        <div class="p-2 pb-0 text-lg">▴ ${temp_max} ℃</div>
+        <div class="py-0 text-base">▾ ${temp_min} ℃</div>
         </div>
         </div>`;
 }
@@ -53,6 +66,56 @@ const getWeatherDetails = (cityName, latitude, longitude) => {
         const city = [data.city.name]
         const icon = [firstDayFirstForecast.weather[0].icon]
         editCurrentDetails(city, currTemp, currHT, currLT, currHumidity, feelsLike, icon);
+
+
+        // 5 day forecast
+
+        const dailyTemperatures = {};
+
+        // Iterate through the list
+        data.list.forEach(entry => {
+            const date = entry.dt_txt.split(" ")[0];
+            const tempMin = entry.main.temp_min;
+            const tempMax = entry.main.temp_max;
+
+            if (!dailyTemperatures[date]) {
+                dailyTemperatures[date] = {
+                    min: tempMin,
+                    max: tempMax
+                };
+            } else {
+                dailyTemperatures[date].min = Math.min(dailyTemperatures[date].min, tempMin);
+                dailyTemperatures[date].max = Math.max(dailyTemperatures[date].max, tempMax);
+            }
+        });
+        
+        forecastCardsDiv.innerHTML = "";
+
+        function getDayName(date, today) {
+            const dateObj = new Date(date);
+            const todayObj = new Date(today);
+        
+            if (date.split("-")[2] == today) {
+                return dayName = "Today";
+            }else{
+                const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                const dayName = dayNames[dateObj.getDay()];
+                console.log(today, date);
+                return dayName;
+            }
+        
+            
+        }
+
+        for (const date in dailyTemperatures) {
+            temp_min = dailyTemperatures[date].min.toFixed(1);
+            temp_max = dailyTemperatures[date].max.toFixed(1);
+            day = getDayName(date, firstForecastDate)
+            html = createdailyCard(day, temp_min, temp_max, icon);
+            forecastCardsDiv.insertAdjacentHTML("beforeend", html);
+        }
+
+            
 
         
         

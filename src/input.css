@@ -2,6 +2,9 @@
 @tailwind components; 
 @tailwind utilities;
 
+.bord{
+    @apply border border-red-600 border-solid;
+}
 
 .hide-scroll-bar {
     -ms-overflow-style: none;
