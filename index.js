@@ -80,15 +80,21 @@ const getWeatherDetails = (cityName, latitude, longitude) => {
             const date = entry.dt_txt.split(" ")[0];
             const tempMin = entry.main.temp_min;
             const tempMax = entry.main.temp_max;
+            const iconID = entry.weather[0].icon;
 
             if (!dailyTemperatures[date]) {
                 dailyTemperatures[date] = {
                     min: tempMin,
-                    max: tempMax
+                    max: tempMax,
+                    icon: iconID  
                 };
             } else {
                 dailyTemperatures[date].min = Math.min(dailyTemperatures[date].min, tempMin);
                 dailyTemperatures[date].max = Math.max(dailyTemperatures[date].max, tempMax);
+                console.log(dailyTemperatures[date].iconID);
+                if (dailyTemperatures[date].icon.substring(0,2) * 1 < iconID.substring(0, 2) * 1 ) {
+                    dailyTemperatures[date].icon =  iconID;
+                }
             }
         });
         
@@ -113,8 +119,9 @@ const getWeatherDetails = (cityName, latitude, longitude) => {
         for (const date in dailyTemperatures) {
             temp_min = dailyTemperatures[date].min.toFixed(1);
             temp_max = dailyTemperatures[date].max.toFixed(1);
+            forecastIcon = dailyTemperatures[date].icon;
             day = getDayName(date, firstForecastDate)
-            html = createdailyCard(day, temp_min, temp_max, icon);
+            html = createdailyCard(day, temp_min, temp_max, forecastIcon);
             forecastCardsDiv.insertAdjacentHTML("beforeend", html);
         }
 
