@@ -4,6 +4,7 @@ const locationButton = document.querySelector(".location-btn");
 const currentWeatherDiv = document.querySelector(".current-weather");
 const weatherCardsDiv = document.querySelector("#hourlyforecast");
 const forecastCardsDiv = document.querySelector("#dailyforecast");
+let cityName;
 
 const API_KEY = "2b121bcd852c911591ed907765576054"; 
 
@@ -65,7 +66,7 @@ const getWeatherDetails = (cityName, latitude, longitude) => {
         const currLT = [firstDayFirstForecast.main.temp_min.toFixed(1)]
         const currHumidity = [firstDayFirstForecast.main.humidity]
         const feelsLike = [firstDayFirstForecast.main.feels_like.toFixed(1)]
-        const city = [data.city.name]
+        const city = cityName;
         const icon = [firstDayFirstForecast.weather[0].icon]
         editCurrentDetails(city, currTemp, currHT, currLT, currHumidity, feelsLike, icon);
 
@@ -146,8 +147,9 @@ const getWeatherDetails = (cityName, latitude, longitude) => {
     });
 }
 
-const getCityCoordinates = () => {
-    const cityName = cityInput.value.trim();
+const getCityCoordinates = (cityName) => {
+    city = cityInput.value.trim()
+    cityName = city.charAt(0).toUpperCase() + city.slice(1)
     if (cityName === "") return;
     const API_URL = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=${"2b121bcd852c911591ed907765576054"}`;
     
@@ -155,7 +157,8 @@ const getCityCoordinates = () => {
     fetch(API_URL).then(response => response.json()).then(data => {
         if (!data.length) return alert(`No coordinates found for ${cityName}`);
         const { lat, lon, name } = data[0];
-        getWeatherDetails(name, lat, lon);
+        console.log(lat, lon, name, cityName);
+        getWeatherDetails(cityName, lat, lon);
     }).catch(() => {
         alert("An error occurred while fetching the coordinates!");
     });
