@@ -16,7 +16,7 @@ const createWeatherCard = (weatherItem, index) => {
     }else {
         response = `<div class="inline-block px-3">
           <div class="w-36 h-40 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
-          <div class="p-2">${Number(weatherItem.dt_txt.split(" ")[1].split(":")[0])}:00</div>`;
+          <div class="p-2">${Number(weatherItem.dt_txt.split(" ")[1].split(":")[0]+3)}:00</div>`;
     }
     return response += `<div class="w-full h-20">
         <img class="mx-auto w-24 -mt-4" src="https://openweathermap.org/img/wn/${weatherItem.weather[0].icon}@2x.png" alt="${weatherItem.weather[0].description}"></div>
